@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - Suivi d'Habitudes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>HabitFlow</h1>
+            <p class="subtitle">suivi d'habitudes</p>
+        </header>
+
+        <section class="stats-section">
+            <div class="stat-card">
+                <span class="stat-value" id="totalHabits">0</span>
+                <span class="stat-label">Habitudes</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="completedToday">0</span>
+                <span class="stat-label">aujourd'hui</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalLogs">0</span>
+                <span class="stat-label">total</span>
+            </div>
+        </section>
+
+        <section class="add-habit-section">
+            <h2>Ajouter une habitude</h2>
+            <form id="habitForm">
+                <div class="form-group">
+                    <input type="text" id="habitName" placeholder="nom" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="habitDesc" placeholder="description">
+                </div>
+                <div class="form-group">
+                    <select id="habitFreq">
+                        <option value="daily">Quotidien</option>
+                        <option value="weekly">Hebdomadaire</option>
+                        <option value="monthly">Mensuel</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Ajouter</button>
+            </form>
+        </section>
+
+        <section class="habits-section">
+            <h2>Mes habitudes</h2>
+            <div id="habitsList" class="habits-list">
+                <p class="loading">chargement...</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

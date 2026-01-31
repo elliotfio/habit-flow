@@ -1,0 +1,89 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: habitflow-frontend
+    restart: unless-stopped
+    networks:
+      - habitflow-network
+    depends_on:
+      - api
+
+  api:
+    build: ./backend
+    container_name: habitflow-api
+    restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    networks:
+      - habitflow-network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15-alpine
+    container_name: habitflow-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - habitflow-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer:latest
+    container_name: habitflow-adminer
+    restart: unless-stopped
+    networks:
+      - habitflow-network
+    depends_on:
+      - db
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: habitflow-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - habitflow-network
+    depends_on:
+      - frontend
+      - api
+      - adminer
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: habitflow-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url http://caddy:80
+    networks:
+      - habitflow-network
+    depends_on:
+      - caddy
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  habitflow-network:
+    driver: bridge

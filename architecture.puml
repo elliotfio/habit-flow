@@ -1,0 +1,27 @@
+@startuml
+!theme sunlust
+title Architecture HabitFlow
+
+node "Docker Host" {
+    component "Cloudflared" as Tunnel #Orange
+    component "Caddy" as Proxy #Yellow
+    
+    package "Reseau Interne" {
+        component "Frontend\n(Nginx)" as Frontend
+        component "API\n(Node.js)" as API
+        component "PostgreSQL" as DB
+        component "Adminer" as Admin
+    }
+}
+
+cloud "Internet" {
+    actor Utilisateur
+}
+
+Utilisateur --> Tunnel : HTTPS
+Tunnel --> Proxy : HTTP
+Proxy --> Frontend : /
+Proxy --> API : /api
+Proxy --> Admin : /adminer
+API --> DB : TCP 5432
+@enduml
