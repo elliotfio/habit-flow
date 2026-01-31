@@ -95,7 +95,7 @@ J'ai travaille seul sur ce projet. J'ai commence par definir l'architecture gene
 
 ### Utilisation de l'IA
 
-**Outils utilises :** Cursor avec Claude
+**Outils utilises :** Antigravity avec Claude
 
 **Usage :**
 * **Generation de code :** J'ai utilise l'IA pour generer la base du code de l'API Node.js et du frontend. Ca m'a permis d'avoir une structure de depart propre.
